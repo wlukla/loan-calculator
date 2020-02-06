@@ -1,29 +1,44 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
+import IpService from '../../services/ip';
 
 class Tab extends React.Component {
   constructor(props) {
     super(props);
+
+    this.IpService = new IpService();
+
     this.state = {
-      zip: null,
-      tradeInValue: 0,
-      downPayment: 0,
+      zip: '',
+      tradeInValue: '$ 0',
+      downPayment: '$ 0',
       creditScore: 750,
       term: 24,
-      apr: 0,
+      apr: '% 0',
     };
   }
 
+  async componentDidMount() {
+    const zip = await this.IpService.getZip();
+    this.zipChange(zip);
+  }
+
   zipChange(zip) {
-    this.setState({ zip });
+    if (zip.length <= 5 && !zip.match(/\D/g)) {
+      this.setState({ zip });
+    }
   }
 
   tradeInChange(tradeInValue) {
-    this.setState({ tradeInValue });
+    if (tradeInValue.includes('$ ') && !tradeInValue.slice(2).match(/\D/g)) {
+      this.setState({ tradeInValue });
+    }
   }
 
   downPaymentsChange(downPayment) {
-    this.setState({ downPayment });
+    if (downPayment.includes('$ ') && !downPayment.slice(2).match(/\D/g)) {
+      this.setState({ downPayment });
+    }
   }
 
   creditScoreChange(creditScore) {
@@ -35,7 +50,9 @@ class Tab extends React.Component {
   }
 
   aprChange(apr) {
-    this.setState({ apr });
+    if (apr.includes('% ') && !apr.slice(2).match(/\D/g)) {
+      this.setState({ apr });
+    }
   }
 
   render() {
@@ -69,7 +86,7 @@ class Tab extends React.Component {
             onChange={(e) => this.termChange(e.target.value)}
           >
             Term in month
-            <select value={term}>
+            <select value={term} onChange={(e) => this.termChange(e.target.value)}>
               <option value="12">12</option>
               <option value="24">24</option>
               <option value="36">36</option>
