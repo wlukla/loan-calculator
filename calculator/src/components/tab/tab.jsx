@@ -61,32 +61,47 @@ class Tab extends React.Component {
     } = this.state;
 
     return (
-      <form>
-        <div className="row">
-          <label className="form-group col-sm d-flex justify-content-between">
+      <form className="border border-primary rounded w-50 mt-5 p-5 mr-5">
+        <div>
+          <label className="form-group d-flex justify-content-between">
             Home zip code
-            <input type="text" value={zip} onChange={(e) => this.zipChange(e.target.value)} />
+            <input
+              className="w-50"
+              type="text"
+              value={zip}
+              onChange={(e) => this.zipChange(e.target.value)}
+            />
           </label>
-          <label className="form-group col-sm d-flex justify-content-between">
+          <label className="form-group d-flex justify-content-between">
             APR
-            <input type="text" value={apr} onChange={(e) => this.aprChange(e.target.value)} />
+            <input
+              className="w-50"
+              type="text"
+              value={apr}
+              onChange={(e) => this.aprChange(e.target.value)}
+            />
           </label>
         </div>
-        <div className="row">
-          <label className="form-group col-sm d-flex justify-content-between">
+        <div>
+          <label className="form-group d-flex justify-content-between">
             Trade-in value
             <input
+              className="w-50"
               type="text"
               value={tradeInValue}
               onChange={(e) => this.tradeInChange(e.target.value)}
             />
           </label>
           <label
-            className="form-group col-sm d-flex justify-content-between"
+            className="form-group d-flex justify-content-between"
             onChange={(e) => this.termChange(e.target.value)}
           >
             Term in month
-            <select value={term} onChange={(e) => this.termChange(e.target.value)}>
+            <select
+              className="w-50"
+              value={term}
+              onChange={(e) => this.termChange(e.target.value)}
+            >
               <option value="12">12</option>
               <option value="24">24</option>
               <option value="36">36</option>
@@ -97,14 +112,23 @@ class Tab extends React.Component {
             </select>
           </label>
         </div>
-        <div className="row">
-          <label className="form-group col-sm d-flex justify-content-between">
+        <div>
+          <label className="form-group d-flex justify-content-between">
             Down payment
-            <input type="text" value={downPayment} onChange={(e) => this.downPaymentsChange(e.target.value)} />
+            <input
+              className="w-50"
+              type="text"
+              value={downPayment}
+              onChange={(e) => this.downPaymentsChange(e.target.value)}
+            />
           </label>
-          <label className="form-group col-sm d-flex justify-content-between">
+          <label className="form-group d-flex justify-content-between">
             Credit Score
-            <select value={creditScore} onChange={(e) => this.creditScoreChange(e.target.value)}>
+            <select
+              className="w-50"
+              value={creditScore}
+              onChange={(e) => this.creditScoreChange(e.target.value)}
+            >
               <option value="600">600</option>
               <option value="650">650</option>
               <option value="700">700</option>
