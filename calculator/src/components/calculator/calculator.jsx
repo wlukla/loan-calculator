@@ -1,8 +1,9 @@
 import React from 'react';
 import InfoCard from '../info-card';
 import IpService from '../../services/ip';
-// import Loan from '../loan/loan';
+import Loan from '../loan/loan';
 import Lease from '../lease';
+import TabSwitcher from '../tab-switcher/tab-switcher';
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class Calculator extends React.Component {
 
     this.IpService = new IpService();
     this.state = {
+      currentTab: 'loan',
       zip: '00000',
       tradeInValue: '$ 0',
       downPayment: '$ 0',
@@ -19,6 +21,7 @@ class Calculator extends React.Component {
       apr: '% 0',
       mileages: '12000',
       monthlyPaymentLoan: '0',
+      monthlyPaymentLease: '0',
       taxes: [0, 0, 0, 0, 0],
       termOptions: [12, 24, 36, 48, 60, 72],
       creditScoreOptions: [600, 650, 700, 750, 800, 850, 900],
@@ -32,6 +35,7 @@ class Calculator extends React.Component {
     this.termChange = this.termChange.bind(this);
     this.aprChange = this.aprChange.bind(this);
     this.mileagesChange = this.mileagesChange.bind(this);
+    this.switchTab = this.switchTab.bind(this);
   }
 
   async componentDidMount() {
@@ -122,30 +126,36 @@ class Calculator extends React.Component {
     this.setState({ calculateMonthlyPaymentLoan });
   }
 
+  switchTab(tabName) {
+    this.setState({ currentTab: tabName });
+  }
+
   render() {
     const {
-      zip, tradeInValue, downPayment, creditScore, term, apr,
+      zip, tradeInValue, downPayment, creditScore, term,
       monthlyPaymentLoan, taxes, termOptions, creditScoreOptions,
-      mileagesOptions, mileages,
+      mileagesOptions, mileages, currentTab, apr,
     } = this.state;
-    return (
-      <div className="container-sm mt-5 d-flex justify-content-between">
-        {/* <Loan
-          zip={zip}
-          tradeInValue={tradeInValue}
-          downPayment={downPayment}
-          creditScore={creditScore}
-          term={term}
-          apr={apr}
-          onZipChange={this.zipChange}
-          onTradeInChange={this.tradeInChange}
-          onDownPaymentChange={this.downPaymentsChange}
-          onCreditScoreChange={this.creditScoreChange}
-          onTermChange={this.termChange}
-          onAprChange={this.aprChange}
-          termOptions={termOptions}
-          creditScoreOptions={creditScoreOptions}
-        /> */}
+
+    const tab = currentTab === 'loan' ? (
+      <Loan
+        zip={zip}
+        tradeInValue={tradeInValue}
+        downPayment={downPayment}
+        creditScore={creditScore}
+        term={term}
+        apr={apr}
+        onZipChange={this.zipChange}
+        onTradeInChange={this.tradeInChange}
+        onDownPaymentChange={this.downPaymentsChange}
+        onCreditScoreChange={this.creditScoreChange}
+        onTermChange={this.termChange}
+        onAprChange={this.aprChange}
+        termOptions={termOptions}
+        creditScoreOptions={creditScoreOptions}
+      />
+    )
+      : (
         <Lease
           zip={zip}
           tradeInValue={tradeInValue}
@@ -163,6 +173,14 @@ class Calculator extends React.Component {
           creditScoreOptions={creditScoreOptions}
           mileagesOptions={mileagesOptions}
         />
+      );
+
+    return (
+      <div className="container-sm mt-5 d-flex justify-content-between">
+        <div className="d-flex flex-column w-100">
+          <TabSwitcher currentTab={currentTab} onTabClick={this.switchTab} />
+          {tab}
+        </div>
         <InfoCard monthlyPayment={monthlyPaymentLoan} taxes={taxes} />
       </div>
     );

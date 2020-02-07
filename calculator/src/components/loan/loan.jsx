@@ -11,7 +11,7 @@ const Loan = (props) => {
   } = props;
 
   return (
-    <form className="border border-primary rounded w-50 mt-5 p-5 mr-5">
+    <form className="border border-primary rounded p-5">
       <Input
         label="Home zip code"
         value={zip}
