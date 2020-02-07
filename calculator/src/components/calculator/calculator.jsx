@@ -27,6 +27,7 @@ class Calculator extends React.Component {
       termOptions: [12, 24, 36, 48, 60, 72],
       creditScoreOptions: [600, 650, 700, 750, 800, 850, 900],
       mileageOptions: [10000, 12000, 15000],
+      autoData: {},
     };
 
     this.zipChange = this.zipChange.bind(this);
@@ -119,6 +120,8 @@ class Calculator extends React.Component {
     let {
       tradeInValue, downPayment, apr, creditScoreValue, term,
     } = this.state;
+    const { autoData } = this.state;
+    const { msrp } = autoData;
     creditScoreValue = Number(creditScoreValue);
     term = Number(term);
     tradeInValue = Number(tradeInValue.slice(2));
@@ -126,7 +129,7 @@ class Calculator extends React.Component {
     apr = Number(apr.slice(2));
 
     const monthlyPaymentLoan = String(
-      ((10000 - tradeInValue - downPayment) / term) * creditScoreValue * apr,
+      ((msrp - tradeInValue - downPayment) / term) * creditScoreValue * apr,
     );
     this.setState({ monthlyPaymentLoan });
   }
@@ -135,6 +138,8 @@ class Calculator extends React.Component {
     let {
       tradeInValue, downPayment, mileage, creditScoreValue, term,
     } = this.state;
+    const { autoData } = this.state;
+    const { msrp } = autoData;
     creditScoreValue = Number(creditScoreValue);
     term = Number(term);
     tradeInValue = Number(tradeInValue.slice(2));
@@ -142,8 +147,8 @@ class Calculator extends React.Component {
     mileage = Number(mileage);
 
     const monthlyPaymentLease = String(
-      (10000 - tradeInValue - downPayment)
-      * (mileage / 10000 / term) * creditScoreValue,
+      (msrp - tradeInValue - downPayment)
+      * (mileage / 1000 / term) * creditScoreValue,
     );
 
     this.setState({ monthlyPaymentLease });
@@ -155,7 +160,7 @@ class Calculator extends React.Component {
 
   render() {
     const {
-      zip, tradeInValue, downPayment, creditScore, term,
+      zip, tradeInValue, downPayment, creditScore, term, autoData,
       monthlyPaymentLoan, taxes, termOptions, creditScoreOptions,
       mileageOptions, mileage, currentTab, apr, monthlyPaymentLease,
     } = this.state;
@@ -208,7 +213,7 @@ class Calculator extends React.Component {
           <TabSwitcher currentTab={currentTab} onTabClick={this.switchTab} />
           {tab}
         </div>
-        <InfoCard monthlyPayment={monthlyPayment} taxes={taxes} />
+        <InfoCard monthlyPayment={monthlyPayment} taxes={taxes} autoData={autoData} />
       </div>
     );
   }
