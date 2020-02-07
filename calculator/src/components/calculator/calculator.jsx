@@ -19,13 +19,13 @@ class Calculator extends React.Component {
       creditScoreValue: '0.95',
       term: '24',
       apr: '% 0',
-      mileages: '12000',
+      mileage: '12000',
       monthlyPaymentLoan: '0',
       monthlyPaymentLease: '0',
       taxes: [0, 0, 0, 0, 0],
       termOptions: [12, 24, 36, 48, 60, 72],
       creditScoreOptions: [600, 650, 700, 750, 800, 850, 900],
-      mileagesOptions: [10000, 12000, 15000],
+      mileageOptions: [10000, 12000, 15000],
     };
 
     this.zipChange = this.zipChange.bind(this);
@@ -34,7 +34,7 @@ class Calculator extends React.Component {
     this.creditScoreChange = this.creditScoreChange.bind(this);
     this.termChange = this.termChange.bind(this);
     this.aprChange = this.aprChange.bind(this);
-    this.mileagesChange = this.mileagesChange.bind(this);
+    this.mileageChange = this.mileageChange.bind(this);
     this.switchTab = this.switchTab.bind(this);
   }
 
@@ -47,6 +47,7 @@ class Calculator extends React.Component {
     if (JSON.stringify(prevState) !== JSON.stringify(this.state)) {
       this.calculateTaxes();
       this.calculateMonthlyPaymentLoan();
+      this.calculateMonthlyPaymentLease();
     }
   }
 
@@ -99,9 +100,9 @@ class Calculator extends React.Component {
     }
   }
 
-  mileagesChange(e) {
-    const mileages = e.target.value;
-    this.setState({ mileages });
+  mileageChange(e) {
+    const mileage = e.target.value;
+    this.setState({ mileage });
   }
 
   calculateTaxes() {
@@ -120,10 +121,28 @@ class Calculator extends React.Component {
     downPayment = Number(downPayment.slice(2));
     apr = Number(apr.slice(2));
 
-    const calculateMonthlyPaymentLoan = String(
+    const monthlyPaymentLoan = String(
       ((10000 - tradeInValue - downPayment) / term) * creditScoreValue * apr,
     );
-    this.setState({ calculateMonthlyPaymentLoan });
+    this.setState({ monthlyPaymentLoan });
+  }
+
+  calculateMonthlyPaymentLease() {
+    let {
+      tradeInValue, downPayment, mileage, creditScoreValue, term,
+    } = this.state;
+    creditScoreValue = Number(creditScoreValue);
+    term = Number(term);
+    tradeInValue = Number(tradeInValue.slice(2));
+    downPayment = Number(downPayment.slice(2));
+    mileage = Number(mileage);
+
+    const monthlyPaymentLease = String(
+      (10000 - tradeInValue - downPayment)
+      * (mileage / 10000 / term) * creditScoreValue,
+    );
+
+    this.setState({ monthlyPaymentLease });
   }
 
   switchTab(tabName) {
@@ -134,7 +153,7 @@ class Calculator extends React.Component {
     const {
       zip, tradeInValue, downPayment, creditScore, term,
       monthlyPaymentLoan, taxes, termOptions, creditScoreOptions,
-      mileagesOptions, mileages, currentTab, apr,
+      mileageOptions, mileage, currentTab, apr, monthlyPaymentLease,
     } = this.state;
 
     const tab = currentTab === 'loan' ? (
@@ -162,18 +181,22 @@ class Calculator extends React.Component {
           downPayment={downPayment}
           creditScore={creditScore}
           term={term}
-          mileages={mileages}
+          mileage={mileage}
           onZipChange={this.zipChange}
           onTradeInChange={this.tradeInChange}
           onDownPaymentChange={this.downPaymentsChange}
           onCreditScoreChange={this.creditScoreChange}
           onTermChange={this.termChange}
-          onMileagesChange={this.mileagesChange}
+          onMileageChange={this.mileageChange}
           termOptions={termOptions}
           creditScoreOptions={creditScoreOptions}
-          mileagesOptions={mileagesOptions}
+          mileageOptions={mileageOptions}
         />
       );
+
+    const monthlyPayment = currentTab === 'loan'
+      ? monthlyPaymentLoan
+      : monthlyPaymentLease;
 
     return (
       <div className="container-sm mt-5 d-flex justify-content-between">
@@ -181,7 +204,7 @@ class Calculator extends React.Component {
           <TabSwitcher currentTab={currentTab} onTabClick={this.switchTab} />
           {tab}
         </div>
-        <InfoCard monthlyPayment={monthlyPaymentLoan} taxes={taxes} />
+        <InfoCard monthlyPayment={monthlyPayment} taxes={taxes} />
       </div>
     );
   }

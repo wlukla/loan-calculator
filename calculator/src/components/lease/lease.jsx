@@ -5,10 +5,10 @@ import Select from '../select';
 
 const Lease = (props) => {
   const {
-    zip, tradeInValue, downPayment, creditScore, term, mileages,
-    onZipChange, onMileagesChange, onTradeInChange, onTermChange,
+    zip, tradeInValue, downPayment, creditScore, term, mileage,
+    onZipChange, onMileageChange, onTradeInChange, onTermChange,
     onDownPaymentChange, onCreditScoreChange, creditScoreOptions, termOptions,
-    mileagesOptions,
+    mileageOptions,
   } = props;
 
   return (
@@ -20,9 +20,9 @@ const Lease = (props) => {
       />
       <Select
         label="Mileages"
-        value={mileages}
-        onChange={onMileagesChange}
-        optionsArr={mileagesOptions}
+        value={mileage}
+        onChange={onMileageChange}
+        optionsArr={mileageOptions}
       />
       <Input
         label="Trade-in value"
@@ -55,17 +55,17 @@ Lease.propTypes = {
   tradeInValue: PropTypes.string.isRequired,
   downPayment: PropTypes.string.isRequired,
   creditScore: PropTypes.string.isRequired,
-  mileages: PropTypes.string.isRequired,
+  mileage: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
   onZipChange: PropTypes.func.isRequired,
-  onMileagesChange: PropTypes.func.isRequired,
+  onMileageChange: PropTypes.func.isRequired,
   onTradeInChange: PropTypes.func.isRequired,
   onTermChange: PropTypes.func.isRequired,
   onDownPaymentChange: PropTypes.func.isRequired,
   onCreditScoreChange: PropTypes.func.isRequired,
   creditScoreOptions: PropTypes.instanceOf(Array).isRequired,
   termOptions: PropTypes.instanceOf(Array).isRequired,
-  mileagesOptions: PropTypes.instanceOf(Array).isRequired,
+  mileageOptions: PropTypes.instanceOf(Array).isRequired,
 };
 
 export default Lease;
