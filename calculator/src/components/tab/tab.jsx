@@ -1,147 +1,107 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import IpService from '../../services/ip';
+import PropTypes from 'prop-types';
 
-class Tab extends React.Component {
-  constructor(props) {
-    super(props);
+const Tab = (props) => {
+  const {
+    zip, tradeInValue, downPayment, creditScore, term, apr,
+    onZipChange, onAprChange, onTradeInChange, onTermChange,
+    onDownPaymentChange, onCreditScoreChange,
+  } = props;
 
-    this.IpService = new IpService();
-
-    this.state = {
-      zip: '',
-      tradeInValue: '$ 0',
-      downPayment: '$ 0',
-      creditScore: 750,
-      term: 24,
-      apr: '% 0',
-    };
-  }
-
-  async componentDidMount() {
-    const zip = await this.IpService.getZip();
-    this.zipChange(zip);
-  }
-
-  zipChange(zip) {
-    if (zip.length <= 5 && !zip.match(/\D/g)) {
-      this.setState({ zip });
-    }
-  }
-
-  tradeInChange(tradeInValue) {
-    if (tradeInValue.includes('$ ') && !tradeInValue.slice(2).match(/\D/g)) {
-      this.setState({ tradeInValue });
-    }
-  }
-
-  downPaymentsChange(downPayment) {
-    if (downPayment.includes('$ ') && !downPayment.slice(2).match(/\D/g)) {
-      this.setState({ downPayment });
-    }
-  }
-
-  creditScoreChange(creditScore) {
-    this.setState({ creditScore });
-  }
-
-  termChange(term) {
-    this.setState({ term });
-  }
-
-  aprChange(apr) {
-    if (apr.includes('% ') && !apr.slice(2).match(/\D/g)) {
-      this.setState({ apr });
-    }
-  }
-
-  render() {
-    const {
-      zip, tradeInValue, downPayment, creditScore, term, apr,
-    } = this.state;
-
-    return (
-      <form className="border border-primary rounded w-50 mt-5 p-5 mr-5">
-        <div>
-          <label className="form-group d-flex justify-content-between">
-            Home zip code
-            <input
-              className="w-50"
-              type="text"
-              value={zip}
-              onChange={(e) => this.zipChange(e.target.value)}
-            />
-          </label>
-          <label className="form-group d-flex justify-content-between">
-            APR
-            <input
-              className="w-50"
-              type="text"
-              value={apr}
-              onChange={(e) => this.aprChange(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="form-group d-flex justify-content-between">
-            Trade-in value
-            <input
-              className="w-50"
-              type="text"
-              value={tradeInValue}
-              onChange={(e) => this.tradeInChange(e.target.value)}
-            />
-          </label>
-          <label
-            className="form-group d-flex justify-content-between"
-            onChange={(e) => this.termChange(e.target.value)}
+  return (
+    <form className="border border-primary rounded w-50 mt-5 p-5 mr-5">
+      <div>
+        <label className="form-group d-flex justify-content-between">
+          Home zip code
+          <input
+            className="w-50"
+            type="text"
+            value={zip}
+            onChange={onZipChange}
+          />
+        </label>
+        <label className="form-group d-flex justify-content-between">
+          APR
+          <input
+            className="w-50"
+            type="text"
+            value={apr}
+            onChange={onAprChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label className="form-group d-flex justify-content-between">
+          Trade-in value
+          <input
+            className="w-50"
+            type="text"
+            value={tradeInValue}
+            onChange={onTradeInChange}
+          />
+        </label>
+        <label className="form-group d-flex justify-content-between">
+          Term in month
+          <select
+            className="w-50"
+            value={term}
+            onChange={onTermChange}
           >
-            Term in month
-            <select
-              className="w-50"
-              value={term}
-              onChange={(e) => this.termChange(e.target.value)}
-            >
-              <option value="12">12</option>
-              <option value="24">24</option>
-              <option value="36">36</option>
-              <option value="48">48</option>
-              <option value="60">60</option>
-              <option value="72">72</option>
-              <option value="84">84</option>
-            </select>
-          </label>
-        </div>
-        <div>
-          <label className="form-group d-flex justify-content-between">
-            Down payment
-            <input
-              className="w-50"
-              type="text"
-              value={downPayment}
-              onChange={(e) => this.downPaymentsChange(e.target.value)}
-            />
-          </label>
-          <label className="form-group d-flex justify-content-between">
-            Credit Score
-            <select
-              className="w-50"
-              value={creditScore}
-              onChange={(e) => this.creditScoreChange(e.target.value)}
-            >
-              <option value="600">600</option>
-              <option value="650">650</option>
-              <option value="700">700</option>
-              <option value="750">750</option>
-              <option value="800">800</option>
-              <option value="850">850</option>
-              <option value="900">900</option>
-            </select>
-          </label>
-        </div>
-      </form>
-    );
-  }
-}
+            <option value="12">12</option>
+            <option value="24">24</option>
+            <option value="36">36</option>
+            <option value="48">48</option>
+            <option value="60">60</option>
+            <option value="72">72</option>
+            <option value="84">84</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label className="form-group d-flex justify-content-between">
+          Down payment
+          <input
+            className="w-50"
+            type="text"
+            value={downPayment}
+            onChange={onDownPaymentChange}
+          />
+        </label>
+        <label className="form-group d-flex justify-content-between">
+          Credit Score
+          <select
+            className="w-50"
+            value={creditScore}
+            onChange={onCreditScoreChange}
+          >
+            <option value="600">600</option>
+            <option value="650">650</option>
+            <option value="700">700</option>
+            <option value="750">750</option>
+            <option value="800">800</option>
+            <option value="850">850</option>
+            <option value="850">850</option>
+          </select>
+        </label>
+      </div>
+    </form>
+  );
+};
+
+Tab.propTypes = {
+  zip: PropTypes.string.isRequired,
+  tradeInValue: PropTypes.string.isRequired,
+  downPayment: PropTypes.string.isRequired,
+  creditScore: PropTypes.string.isRequired,
+  apr: PropTypes.string.isRequired,
+  term: PropTypes.string.isRequired,
+  onZipChange: PropTypes.func.isRequired,
+  onAprChange: PropTypes.func.isRequired,
+  onTradeInChange: PropTypes.func.isRequired,
+  onTermChange: PropTypes.func.isRequired,
+  onDownPaymentChange: PropTypes.func.isRequired,
+  onCreditScoreChange: PropTypes.func.isRequired,
+};
 
 export default Tab;
