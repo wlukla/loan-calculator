@@ -4,6 +4,7 @@ import IpService from '../../services/ip';
 import Loan from '../loan/loan';
 import Lease from '../lease';
 import TabSwitcher from '../tab-switcher/tab-switcher';
+import getData from '../../services/data-mock';
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -40,7 +41,10 @@ class Calculator extends React.Component {
 
   async componentDidMount() {
     const zip = await this.IpService.getZip();
-    this.setState({ zip });
+    const autoData = await getData();
+    this.setState({
+      zip, autoData,
+    });
   }
 
   componentDidUpdate(_, prevState) {
