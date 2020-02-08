@@ -5,6 +5,7 @@ import Loan from '../loan/loan';
 import Lease from '../lease';
 import TabSwitcher from '../tab-switcher/tab-switcher';
 import getData from '../../services/data-mock';
+import Spinner from '../../spinner';
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -12,8 +13,9 @@ class Calculator extends React.Component {
 
     this.IpService = new IpService();
     this.state = {
+      isLoading: true,
       currentTab: 'loan',
-      zip: '00000',
+      zip: '',
       tradeInValue: '$ 0',
       downPayment: '$ 0',
       creditScore: '750',
@@ -23,7 +25,7 @@ class Calculator extends React.Component {
       mileage: '12000',
       monthlyPaymentLoan: '0',
       monthlyPaymentLease: '0',
-      taxes: [0, 0, 0, 0, 0],
+      taxes: '',
       termOptions: [12, 24, 36, 48, 60, 72],
       creditScoreOptions: [600, 650, 700, 750, 800, 850, 900],
       mileageOptions: [10000, 12000, 15000],
@@ -41,18 +43,24 @@ class Calculator extends React.Component {
   }
 
   async componentDidMount() {
-    const zip = await this.IpService.getZip();
-    const autoData = await getData();
-    this.setState({
-      zip, autoData,
-    });
+    const storage = sessionStorage.getItem('state');
+    if (storage) {
+      this.setState(JSON.parse(storage));
+    } else {
+      const zip = await this.IpService.getZip();
+      const autoData = await getData();
+      this.setState({
+        zip, autoData, isLoading: false,
+      });
+    }
   }
 
-  componentDidUpdate(_, prevState) {
+  async componentDidUpdate(_, prevState) {
     if (JSON.stringify(prevState) !== JSON.stringify(this.state)) {
       this.calculateTaxes();
-      this.calculateMonthlyPaymentLoan();
-      this.calculateMonthlyPaymentLease();
+      Promise.resolve(this.calculateMonthlyPaymentLoan());
+      Promise.resolve(this.calculateMonthlyPaymentLease());
+      sessionStorage.setItem('state', JSON.stringify(this.state));
     }
   }
 
@@ -112,7 +120,7 @@ class Calculator extends React.Component {
 
   calculateTaxes() {
     const { zip } = this.state;
-    const taxes = zip.split('').map((el) => +el * 11);
+    const taxes = zip.split('').map((el) => `${+el * 11}%`).join(', ');
     this.setState({ taxes });
   }
 
@@ -131,10 +139,12 @@ class Calculator extends React.Component {
     const monthlyPaymentLoan = String(
       ((msrp - tradeInValue - downPayment) / term) * creditScoreValue * apr,
     );
-    this.setState({ monthlyPaymentLoan });
+
+    this.setState({ monthlyPaymentLoan, isLoading: false });
   }
 
   calculateMonthlyPaymentLease() {
+    this.setState({ isLoading: true });
     let {
       tradeInValue, downPayment, mileage, creditScoreValue, term,
     } = this.state;
@@ -151,7 +161,7 @@ class Calculator extends React.Component {
       * (mileage / 1000 / term) * creditScoreValue,
     );
 
-    this.setState({ monthlyPaymentLease });
+    this.setState({ monthlyPaymentLease, isLoading: false });
   }
 
   switchTab(tabName) {
@@ -162,8 +172,14 @@ class Calculator extends React.Component {
     const {
       zip, tradeInValue, downPayment, creditScore, term, autoData,
       monthlyPaymentLoan, taxes, termOptions, creditScoreOptions,
-      mileageOptions, mileage, currentTab, apr, monthlyPaymentLease,
+      mileageOptions, mileage, currentTab, apr, monthlyPaymentLease, isLoading,
     } = this.state;
+
+    if (isLoading) {
+      return (
+        <Spinner />
+      );
+    }
 
     const tab = currentTab === 'loan' ? (
       <Loan
