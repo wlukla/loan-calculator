@@ -16,12 +16,12 @@ class Calculator extends React.Component {
       isLoading: true,
       currentTab: 'loan',
       zip: '',
-      tradeInValue: '$ 0',
-      downPayment: '$ 0',
+      downPayment: '',
       creditScore: '750',
       creditScoreValue: '0.95',
       term: '24',
-      apr: '% 0',
+      tradeInValue: '',
+      apr: '',
       mileage: '12000',
       monthlyPaymentLoan: '0',
       monthlyPaymentLease: '0',
@@ -30,6 +30,8 @@ class Calculator extends React.Component {
       creditScoreOptions: [600, 650, 700, 750, 800, 850, 900],
       mileageOptions: [10000, 12000, 15000],
       autoData: {},
+      isTradeInError: false,
+      isDownPaymentError: false,
     };
 
     this.zipChange = this.zipChange.bind(this);
@@ -66,22 +68,26 @@ class Calculator extends React.Component {
 
   zipChange(e) {
     const zip = e.target.value;
-    if (zip.length <= 5 && !zip.match(/\D/g)) {
-      this.setState({ zip });
-    }
+    this.setState({ zip });
   }
 
   tradeInChange(e) {
-    const tradeInValue = e.target.value;
-    if (tradeInValue.includes('$ ') && !tradeInValue.slice(2).match(/\D/g)) {
-      this.setState({ tradeInValue });
+    const { autoData: { msrp } } = this.state;
+    const tradeInValue = e.target.value.slice(2).replace(/_/g, '');
+    if (Number(tradeInValue) > msrp / 4) {
+      this.setState({ tradeInValue, isTradeInError: true });
+    } else {
+      this.setState({ tradeInValue, isTradeInError: false });
     }
   }
 
   downPaymentsChange(e) {
-    const downPayment = e.target.value;
-    if (downPayment.includes('$ ') && !downPayment.slice(2).match(/\D/g)) {
-      this.setState({ downPayment });
+    const { autoData: { msrp } } = this.state;
+    const downPayment = e.target.value.slice(2).replace(/_/g, '');
+    if (Number(downPayment) > msrp / 4) {
+      this.setState({ isDownPaymentError: true });
+    } else {
+      this.setState({ downPayment, isDownPaymentError: false });
     }
   }
 
@@ -107,10 +113,8 @@ class Calculator extends React.Component {
   }
 
   aprChange(e) {
-    const apr = e.target.value;
-    if (apr.includes('% ') && !apr.slice(2).match(/\D/g) && apr.length <= 5) {
-      this.setState({ apr });
-    }
+    const apr = e.target.value.slice(2).replace(/_/g, '');
+    this.setState({ apr });
   }
 
   mileageChange(e) {
@@ -131,10 +135,10 @@ class Calculator extends React.Component {
     const { autoData } = this.state;
     const { msrp } = autoData;
     creditScoreValue = Number(creditScoreValue);
+    tradeInValue = Number(tradeInValue);
     term = Number(term);
-    tradeInValue = Number(tradeInValue.slice(2));
-    downPayment = Number(downPayment.slice(2));
-    apr = Number(apr.slice(2));
+    downPayment = Number(downPayment);
+    apr = Number(apr);
 
     const monthlyPaymentLoan = String(
       ((msrp - tradeInValue - downPayment) / term) * creditScoreValue * apr,
@@ -150,9 +154,9 @@ class Calculator extends React.Component {
     } = this.state;
     const { autoData } = this.state;
     const { msrp } = autoData;
+    tradeInValue = Number(tradeInValue);
     creditScoreValue = Number(creditScoreValue);
     term = Number(term);
-    tradeInValue = Number(tradeInValue.slice(2));
     downPayment = Number(downPayment.slice(2));
     mileage = Number(mileage);
 
@@ -173,6 +177,7 @@ class Calculator extends React.Component {
       zip, tradeInValue, downPayment, creditScore, term, autoData,
       monthlyPaymentLoan, taxes, termOptions, creditScoreOptions,
       mileageOptions, mileage, currentTab, apr, monthlyPaymentLease, isLoading,
+      isDownPaymentError, isTradeInError,
     } = this.state;
 
     if (isLoading) {
@@ -197,6 +202,8 @@ class Calculator extends React.Component {
         onAprChange={this.aprChange}
         termOptions={termOptions}
         creditScoreOptions={creditScoreOptions}
+        isTradeInError={isTradeInError}
+        isDownPaymentError={isDownPaymentError}
       />
     )
       : (
@@ -216,6 +223,8 @@ class Calculator extends React.Component {
           termOptions={termOptions}
           creditScoreOptions={creditScoreOptions}
           mileageOptions={mileageOptions}
+          isTradeInError={isTradeInError}
+          isDownPaymentError={isDownPaymentError}
         />
       );
 

@@ -8,12 +8,13 @@ const Lease = (props) => {
     zip, tradeInValue, downPayment, creditScore, term, mileage,
     onZipChange, onMileageChange, onTradeInChange, onTermChange,
     onDownPaymentChange, onCreditScoreChange, creditScoreOptions, termOptions,
-    mileageOptions,
+    mileageOptions, isTradeInError, isDownPaymentError,
   } = props;
 
   return (
     <form className="border border-primary rounded p-5">
       <Input
+        mask="99999"
         label="Home zip code"
         value={zip}
         onChange={onZipChange}
@@ -25,9 +26,11 @@ const Lease = (props) => {
         optionsArr={mileageOptions}
       />
       <Input
+        mask="$ 9999999"
         label="Trade-in value"
         value={tradeInValue}
         onChange={onTradeInChange}
+        error={isTradeInError}
       />
       <Select
         label="Term in month"
@@ -36,9 +39,11 @@ const Lease = (props) => {
         optionsArr={termOptions}
       />
       <Input
+        mask="$ 9999999"
         label="Down payment"
         value={downPayment}
         onChange={onDownPaymentChange}
+        error={isDownPaymentError}
       />
       <Select
         label="Credit Score"
@@ -66,6 +71,8 @@ Lease.propTypes = {
   creditScoreOptions: PropTypes.instanceOf(Array).isRequired,
   termOptions: PropTypes.instanceOf(Array).isRequired,
   mileageOptions: PropTypes.instanceOf(Array).isRequired,
+  isTradeInError: PropTypes.bool.isRequired,
+  isDownPaymentError: PropTypes.bool.isRequired,
 };
 
 export default Lease;
