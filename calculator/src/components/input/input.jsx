@@ -19,6 +19,8 @@ const Input = (props) => {
       <div className="d-flex flex-column w-50">
         <InputMask
           mask={mask}
+          maskPlaceholder=""
+          alwaysShowMask
           className="w-100"
           type="text"
           value={value}
