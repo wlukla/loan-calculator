@@ -12,7 +12,7 @@ const Lease = (props) => {
   } = props;
 
   return (
-    <form className="border border-primary rounded p-5">
+    <form className="border border-primary rounded p-4">
       <Input
         mask="99999"
         label="Home zip code"

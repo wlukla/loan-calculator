@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
+import PropTypes from 'prop-types';
 
 const Input = (props) => {
   const {

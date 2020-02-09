@@ -6,6 +6,7 @@ import Lease from '../lease';
 import TabSwitcher from '../tab-switcher/tab-switcher';
 import getData from '../../services/data-mock';
 import Spinner from '../../spinner';
+import './calculator.css';
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -254,12 +255,14 @@ class Calculator extends React.Component {
       : monthlyPaymentLease;
 
     return (
-      <div className="container-sm mt-5 d-flex justify-content-between">
-        <div className="d-flex flex-column w-100">
+      <div className="container-sm mt-5 d-flex justify-content-between flex-wrap w-100">
+        <div className="d-flex flex-column left">
           <TabSwitcher currentTab={currentTab} onTabClick={this.switchTab} />
           {tab}
         </div>
-        <InfoCard monthlyPayment={monthlyPayment} taxes={taxes} autoData={autoData} />
+        <div className="border border-secondary rounded mt-5 mb-5 p-4 d-flex flex-column right">
+          <InfoCard monthlyPayment={monthlyPayment} taxes={taxes} autoData={autoData} />
+        </div>
       </div>
     );
   }

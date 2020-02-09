@@ -11,7 +11,7 @@ const Loan = (props) => {
   } = props;
 
   return (
-    <form className="border border-primary rounded p-5">
+    <form className="border border-primary rounded p-4">
       <Input
         mask="99999"
         label="Home zip code"
@@ -19,7 +19,7 @@ const Loan = (props) => {
         onChange={onZipChange}
       />
       <Input
-        mask="% 99.99"
+        mask="% 9.9"
         label="APR"
         value={apr}
         onChange={onAprChange}
