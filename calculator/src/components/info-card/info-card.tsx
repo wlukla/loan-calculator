@@ -43,10 +43,4 @@ const InfoCard = (props) => {
   );
 };
 
-InfoCard.propTypes = {
-  autoData: PropTypes.instanceOf(Object).isRequired,
-  monthlyPayment: PropTypes.number.isRequired,
-  taxes: PropTypes.string.isRequired,
-};
-
 export default InfoCard;

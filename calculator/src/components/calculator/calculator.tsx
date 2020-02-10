@@ -1,5 +1,4 @@
 import React from 'react';
-import InfoCard from '../info-card';
 import IpService from '../../services/ip';
 import Loan from '../loan';
 import Lease from '../lease';
@@ -7,8 +6,47 @@ import TabSwitcher from '../tab-switcher/tab-switcher';
 import getData from '../../services/data-mock';
 import './calculator.css';
 import { trim, trimWithSign } from '../../utils/utils';
+import InfoCard from '../info-card';
+
+interface IMyState {
+  isLoadingZip: boolean,
+  currentTab: string,
+  zip: string,
+  downPayment: string,
+  creditScore: string,
+  creditScoreValue: string,
+  term: string,
+  tradeInValue: string,
+  mileage: string,
+  apr: string,
+  autoData?: IAutoData,
+  taxes: string,
+  monthlyPaymentLoan: number,
+  monthlyPaymentLease: number,
+  isTradeInError: boolean,
+  isDownPaymentError: boolean,
+};
+
+interface IAutoData {
+  vehicleName: string,
+  msrp: number,
+  dealerName: string,
+  dealerPhoneNumber: string,
+  dealerRating: number,
+}
+
+interface IIpService {
+  getZip: IGetZip,
+}
+
+interface IGetZip {
+  (): Promise<string>
+}
 
 class Calculator extends React.Component {
+  IpService: IIpService;
+  state: IMyState;
+
   constructor(props) {
     super(props);
 
@@ -25,8 +63,13 @@ class Calculator extends React.Component {
       tradeInValue: '',
       mileage: '12000',
       apr: '',
-
-      autoData: {},
+      autoData: {
+        vehicleName: '',
+        msrp: 0,
+        dealerName: '',
+        dealerPhoneNumber: '',
+        dealerRating: 0,
+      },
 
       taxes: '',
       monthlyPaymentLoan: 0,
@@ -117,13 +160,13 @@ class Calculator extends React.Component {
     let { creditScoreValue } = this.state;
 
     if (creditScore >= 750) {
-      creditScoreValue = 0.95;
+      creditScoreValue = '0.95';
     } else if (creditScore >= 700 && creditScore < 750) {
-      creditScoreValue = 1;
+      creditScoreValue = '1';
     } else if (creditScore >= 640 && creditScore < 700) {
-      creditScoreValue = 1.05;
+      creditScoreValue = '1.05';
     } else {
-      creditScoreValue = 1.2;
+      creditScoreValue = '1.2';
     }
 
     this.setState({ creditScore, creditScoreValue });
@@ -166,7 +209,7 @@ class Calculator extends React.Component {
     );
 
     return new Promise((resolve) => {
-      setInterval(resolve(monthlyPaymentLoan), 500);
+      resolve(monthlyPaymentLoan);
     });
   }
 

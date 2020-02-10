@@ -1,4 +1,7 @@
 class IpService {
+  token: string;
+  urlBase: string;
+
   constructor() {
     this.token = '116408751d826f';
     this.urlBase = 'https://ipinfo.io/';

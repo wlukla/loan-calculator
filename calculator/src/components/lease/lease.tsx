@@ -57,21 +57,4 @@ const Lease = (props) => {
   );
 };
 
-Lease.propTypes = {
-  zip: PropTypes.string.isRequired,
-  tradeInValue: PropTypes.string.isRequired,
-  downPayment: PropTypes.string.isRequired,
-  creditScore: PropTypes.string.isRequired,
-  mileage: PropTypes.string.isRequired,
-  term: PropTypes.string.isRequired,
-  onZipChange: PropTypes.func.isRequired,
-  onMileageChange: PropTypes.func.isRequired,
-  onTradeInChange: PropTypes.func.isRequired,
-  onTermChange: PropTypes.func.isRequired,
-  onDownPaymentChange: PropTypes.func.isRequired,
-  onCreditScoreChange: PropTypes.func.isRequired,
-  isTradeInError: PropTypes.bool.isRequired,
-  isDownPaymentError: PropTypes.bool.isRequired,
-};
-
 export default Lease;

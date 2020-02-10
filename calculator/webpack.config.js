@@ -2,13 +2,19 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
-  entry: './src/index.jsx',
+  entry: [
+    path.join(process.cwd(), './src/index.tsx'),
+  ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader',
+      },
       {
         test: /\.(js|jsx)$/,
         use: 'babel-loader',
@@ -67,8 +73,11 @@ const config = {
   },
   resolve: {
     extensions: [
+      '.ts',
+      '.tsx',
       '.js',
       '.jsx',
+      '.react.js',
     ],
   },
   devServer: {
