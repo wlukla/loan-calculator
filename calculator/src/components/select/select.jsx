@@ -18,6 +18,7 @@ const Select = (props) => {
         value={value}
         id={value}
         onChange={onChange}
+        tabIndex={0}
       >
         {renderedOptions}
       </select>

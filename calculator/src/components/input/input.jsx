@@ -18,7 +18,7 @@ const Input = (props) => {
   }
 
   return (
-    <label className="form-group d-flex justify-content-between" htmlFor={value}>
+    <label className="form-group d-flex justify-content-between" htmlFor={label}>
       {label}
       <div className="d-flex flex-column w-50">
         <InputMask
@@ -29,7 +29,8 @@ const Input = (props) => {
           type="text"
           value={value}
           onChange={onChange}
-          id={value}
+          id={label}
+          tabIndex={0}
         />
         { errorMessage }
       </div>

@@ -20,6 +20,7 @@ const TabSwitcher = (props) => {
         onClick={() => onTabClick(name)}
         type="button"
         key={label}
+        tabIndex={0}
       >
         {label}
       </button>
