@@ -7,11 +7,19 @@ const Select = (props) => {
   } = props;
 
   const renderedOptions = optionsArr.map((el) => (
-    <option value={el} key={el}>{el}</option>
+    <option
+      value={el}
+      key={el}
+    >
+      {el}
+    </option>
   ));
 
   return (
-    <label className="form-group d-flex justify-content-between" htmlFor={value}>
+    <label
+      className="form-group d-flex justify-content-between"
+      htmlFor={value}
+    >
       {label}
       <select
         className="w-50"

@@ -83,9 +83,15 @@ class Calculator extends React.Component {
     const tradeInValue = trimWithSign(e.target.value);
 
     if (Number(tradeInValue) > msrp / 4) {
-      this.setState({ tradeInValue, isTradeInError: true });
+      this.setState({
+        tradeInValue,
+        isTradeInError: true,
+      });
     } else {
-      this.setState({ tradeInValue, isTradeInError: false });
+      this.setState({
+        tradeInValue,
+        isTradeInError: false,
+      });
     }
   }
 
@@ -94,9 +100,15 @@ class Calculator extends React.Component {
     const downPayment = trimWithSign(e.target.value);
 
     if (Number(downPayment) > msrp / 4) {
-      this.setState({ downPayment, isDownPaymentError: true });
+      this.setState({
+        downPayment,
+        isDownPaymentError: true,
+      });
     } else {
-      this.setState({ downPayment, isDownPaymentError: false });
+      this.setState({
+        downPayment,
+        isDownPaymentError: false,
+      });
     }
   }
 
@@ -247,11 +259,20 @@ class Calculator extends React.Component {
     return (
       <div className="container-sm mt-5 d-flex justify-content-between flex-wrap w-100">
         <div className="d-flex flex-column left">
-          <TabSwitcher currentTab={currentTab} onTabClick={this.switchTab} />
+          <TabSwitcher
+            currentTab={currentTab}
+            onTabClick={this.switchTab}
+          />
           {tab}
         </div>
-        <div className="border border-secondary rounded mt-5 mb-5 p-4 d-flex flex-column right">
-          <InfoCard monthlyPayment={monthlyPayment} taxes={taxes} autoData={autoData} />
+        <div
+          className="border border-secondary rounded mt-5 mb-5 p-4 d-flex flex-column right"
+        >
+          <InfoCard
+            monthlyPayment={monthlyPayment}
+            taxes={taxes}
+            autoData={autoData}
+          />
         </div>
       </div>
     );

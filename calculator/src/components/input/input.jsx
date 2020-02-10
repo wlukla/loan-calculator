@@ -18,7 +18,10 @@ const Input = (props) => {
   }
 
   return (
-    <label className="form-group d-flex justify-content-between" htmlFor={label}>
+    <label
+      className="form-group d-flex justify-content-between"
+      htmlFor={label}
+    >
       {label}
       <div className="d-flex flex-column w-50">
         <InputMask
