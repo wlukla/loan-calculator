@@ -1,12 +1,12 @@
 import React from 'react';
 import InfoCard from '../info-card';
 import IpService from '../../services/ip';
-import Loan from '../loan/loan';
+import Loan from '../loan';
 import Lease from '../lease';
 import TabSwitcher from '../tab-switcher/tab-switcher';
 import getData from '../../services/data-mock';
-import Spinner from '../../spinner';
 import './calculator.css';
+import { trim, trimWithSign } from '../../utils/utils';
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -14,8 +14,9 @@ class Calculator extends React.Component {
 
     this.IpService = new IpService();
     this.state = {
-      isLoading: true,
+      isLoadingZip: true,
       currentTab: 'loan',
+
       zip: '',
       downPayment: '',
       creditScore: '750',
@@ -23,14 +24,14 @@ class Calculator extends React.Component {
       term: '24',
       tradeInValue: '',
       mileage: '12000',
+      apr: '',
+
+      autoData: {},
+
+      taxes: '',
       monthlyPaymentLoan: 0,
       monthlyPaymentLease: 0,
-      apr: '',
-      taxes: '',
-      termOptions: [12, 24, 36, 48, 60, 72],
-      creditScoreOptions: [600, 650, 700, 750, 800, 850, 900],
-      mileageOptions: [10000, 12000, 15000],
-      autoData: {},
+
       isTradeInError: false,
       isDownPaymentError: false,
     };
@@ -48,26 +49,24 @@ class Calculator extends React.Component {
   async componentDidMount() {
     const storage = sessionStorage.getItem('state');
     if (storage) {
-      this.setState(JSON.parse(storage));
+      this.setState({ ...JSON.parse(storage), isLoadingZip: false });
     } else {
       const zip = await this.IpService.getZip();
       const autoData = await getData();
       this.setState({
-        zip, autoData, isLoading: false,
+        zip, autoData, isLoadingZip: false,
       });
     }
   }
 
   async componentDidUpdate(_, prevState) {
     if (JSON.stringify(prevState) !== JSON.stringify(this.state)) {
-      const { zip, isTradeInError, isDownPaymentError } = this.state;
-      if (zip.length === 5) {
-        this.calculateTaxes();
-      }
+      const { isTradeInError, isDownPaymentError } = this.state;
+      this.updateTaxes();
 
       if (!isTradeInError && !isDownPaymentError) {
-        Promise.resolve(this.calculateMonthlyPaymentLoan());
-        Promise.resolve(this.calculateMonthlyPaymentLease());
+        this.updateMonthlyPaymentLoan();
+        this.updateMonthlyPaymentLease();
       }
 
       sessionStorage.setItem('state', JSON.stringify(this.state));
@@ -75,15 +74,13 @@ class Calculator extends React.Component {
   }
 
   zipChange(e) {
-    const zip = e.target.value.replace(/_/g, '');
+    const zip = trim(e.target.value);
     this.setState({ zip });
   }
 
   tradeInChange(e) {
     const { autoData: { msrp } } = this.state;
-    const tradeInValue = e.target.value
-      .slice(2)
-      .replace(/_/g, '');
+    const tradeInValue = trimWithSign(e.target.value);
 
     if (Number(tradeInValue) > msrp / 4) {
       this.setState({ tradeInValue, isTradeInError: true });
@@ -94,9 +91,7 @@ class Calculator extends React.Component {
 
   downPaymentsChange(e) {
     const { autoData: { msrp } } = this.state;
-    const downPayment = e.target.value
-      .slice(2)
-      .replace(/_/g, '');
+    const downPayment = trimWithSign(e.target.value);
 
     if (Number(downPayment) > msrp / 4) {
       this.setState({ downPayment, isDownPaymentError: true });
@@ -128,7 +123,7 @@ class Calculator extends React.Component {
   }
 
   aprChange(e) {
-    const apr = e.target.value.slice(2).replace(/_/g, '');
+    const apr = trimWithSign(e.target.value);
     this.setState({ apr });
   }
 
@@ -137,7 +132,7 @@ class Calculator extends React.Component {
     this.setState({ mileage });
   }
 
-  calculateTaxes() {
+  updateTaxes() {
     const { zip } = this.state;
     const taxes = zip
       .split('')
@@ -148,46 +143,52 @@ class Calculator extends React.Component {
   }
 
   calculateMonthlyPaymentLoan() {
-    this.setState({ isLoading: true });
-
-    let {
+    const {
       tradeInValue, downPayment, apr, creditScoreValue, term,
     } = this.state;
     const { autoData } = this.state;
     const { msrp } = autoData;
-    creditScoreValue = Number(creditScoreValue);
-    tradeInValue = Number(tradeInValue);
-    term = Number(term);
-    downPayment = Number(downPayment);
-    apr = Number(apr);
 
     const monthlyPaymentLoan = Math.round(
-      ((msrp - tradeInValue - downPayment) / term) * creditScoreValue * apr,
+      ((+msrp - +tradeInValue - +downPayment) / +term) * +creditScoreValue * +apr,
     );
 
-    this.setState({ monthlyPaymentLoan, isLoading: false });
+    return new Promise((resolve) => {
+      setInterval(resolve(monthlyPaymentLoan), 500);
+    });
   }
 
   calculateMonthlyPaymentLease() {
-    this.setState({ isLoading: true });
-
-    let {
+    const {
       tradeInValue, downPayment, mileage, creditScoreValue, term,
     } = this.state;
     const { autoData } = this.state;
     const { msrp } = autoData;
-    tradeInValue = Number(tradeInValue);
-    creditScoreValue = Number(creditScoreValue);
-    term = Number(term);
-    downPayment = Number(downPayment.slice(2));
-    mileage = Number(mileage);
 
     const monthlyPaymentLease = Math.round(
-      (msrp - tradeInValue - downPayment)
-      * (mileage / 1000 / term) * creditScoreValue,
+      (msrp - +tradeInValue - +downPayment)
+      * (+mileage / 10000 / +term) * +creditScoreValue,
     );
 
-    this.setState({ monthlyPaymentLease, isLoading: false });
+    return new Promise((resolve) => {
+      resolve(monthlyPaymentLease);
+    });
+  }
+
+  async updateMonthlyPaymentLease() {
+    const monthlyPaymentLease = await Promise
+      .resolve(this.calculateMonthlyPaymentLease())
+      .then((res) => res);
+
+    this.setState({ monthlyPaymentLease });
+  }
+
+  async updateMonthlyPaymentLoan() {
+    const monthlyPaymentLoan = await Promise
+      .resolve(this.calculateMonthlyPaymentLoan())
+      .then((res) => res);
+
+    this.setState({ monthlyPaymentLoan });
   }
 
   switchTab(tabName) {
@@ -197,16 +198,9 @@ class Calculator extends React.Component {
   render() {
     const {
       zip, tradeInValue, downPayment, creditScore, term, autoData,
-      monthlyPaymentLoan, taxes, termOptions, creditScoreOptions,
-      mileageOptions, mileage, currentTab, apr, monthlyPaymentLease, isLoading,
-      isDownPaymentError, isTradeInError,
+      monthlyPaymentLoan, taxes, mileage, currentTab, apr, monthlyPaymentLease,
+      isLoadingZip, isDownPaymentError, isTradeInError,
     } = this.state;
-
-    if (isLoading) {
-      return (
-        <Spinner />
-      );
-    }
 
     const tab = currentTab === 'loan' ? (
       <Loan
@@ -222,10 +216,9 @@ class Calculator extends React.Component {
         onCreditScoreChange={this.creditScoreChange}
         onTermChange={this.termChange}
         onAprChange={this.aprChange}
-        termOptions={termOptions}
-        creditScoreOptions={creditScoreOptions}
         isTradeInError={isTradeInError}
         isDownPaymentError={isDownPaymentError}
+        isLoadingZip={isLoadingZip}
       />
     )
       : (
@@ -242,9 +235,6 @@ class Calculator extends React.Component {
           onCreditScoreChange={this.creditScoreChange}
           onTermChange={this.termChange}
           onMileageChange={this.mileageChange}
-          termOptions={termOptions}
-          creditScoreOptions={creditScoreOptions}
-          mileageOptions={mileageOptions}
           isTradeInError={isTradeInError}
           isDownPaymentError={isDownPaymentError}
         />

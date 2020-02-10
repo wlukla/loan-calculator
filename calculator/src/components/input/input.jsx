@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import InputMask from 'react-input-mask';
 import PropTypes from 'prop-types';
@@ -7,14 +6,19 @@ const Input = (props) => {
   const {
     label, value, onChange, error, mask,
   } = props;
+
   let errorMessage;
 
   if (error) {
-    errorMessage = <span className="alert-sm alert-warning">Value can&apos;t be greater than 25% MSRP</span>;
+    errorMessage = (
+      <span className="alert-sm alert-warning">
+        Value can&apos;t be greater than 25% MSRP
+      </span>
+    );
   }
 
   return (
-    <label className="form-group d-flex justify-content-between">
+    <label className="form-group d-flex justify-content-between" htmlFor={value}>
       {label}
       <div className="d-flex flex-column w-50">
         <InputMask
@@ -25,6 +29,7 @@ const Input = (props) => {
           type="text"
           value={value}
           onChange={onChange}
+          id={value}
         />
         { errorMessage }
       </div>

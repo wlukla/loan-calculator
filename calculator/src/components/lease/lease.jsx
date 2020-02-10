@@ -7,8 +7,7 @@ const Lease = (props) => {
   const {
     zip, tradeInValue, downPayment, creditScore, term, mileage,
     onZipChange, onMileageChange, onTradeInChange, onTermChange,
-    onDownPaymentChange, onCreditScoreChange, creditScoreOptions, termOptions,
-    mileageOptions, isTradeInError, isDownPaymentError,
+    onDownPaymentChange, onCreditScoreChange, isTradeInError, isDownPaymentError,
   } = props;
 
   return (
@@ -23,8 +22,9 @@ const Lease = (props) => {
         label="Mileages"
         value={mileage}
         onChange={onMileageChange}
-        optionsArr={mileageOptions}
-      />
+      >
+        {[10000, 12000, 15000]}
+      </Select>
       <Input
         mask="$ 9999999"
         label="Trade-in value"
@@ -36,8 +36,9 @@ const Lease = (props) => {
         label="Term in month"
         value={term}
         onChange={onTermChange}
-        optionsArr={termOptions}
-      />
+      >
+        {[12, 24, 36, 48, 60, 72]}
+      </Select>
       <Input
         mask="$ 9999999"
         label="Down payment"
@@ -49,8 +50,9 @@ const Lease = (props) => {
         label="Credit Score"
         value={creditScore}
         onChange={onCreditScoreChange}
-        optionsArr={creditScoreOptions}
-      />
+      >
+        {[600, 650, 700, 750, 800, 850, 900]}
+      </Select>
     </form>
   );
 };
@@ -68,9 +70,6 @@ Lease.propTypes = {
   onTermChange: PropTypes.func.isRequired,
   onDownPaymentChange: PropTypes.func.isRequired,
   onCreditScoreChange: PropTypes.func.isRequired,
-  creditScoreOptions: PropTypes.instanceOf(Array).isRequired,
-  termOptions: PropTypes.instanceOf(Array).isRequired,
-  mileageOptions: PropTypes.instanceOf(Array).isRequired,
   isTradeInError: PropTypes.bool.isRequired,
   isDownPaymentError: PropTypes.bool.isRequired,
 };

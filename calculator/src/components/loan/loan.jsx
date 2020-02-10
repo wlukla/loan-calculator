@@ -2,13 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Input from '../input';
 import Select from '../select';
+import Spinner from '../spinner';
 
 const Loan = (props) => {
   const {
     zip, tradeInValue, downPayment, creditScore, term, apr, isTradeInError,
     onZipChange, onAprChange, onTradeInChange, onTermChange, isDownPaymentError,
-    onDownPaymentChange, onCreditScoreChange, creditScoreOptions, termOptions,
+    onDownPaymentChange, onCreditScoreChange, isLoadingZip,
   } = props;
+
+  if (isLoadingZip) {
+    return (
+      <Spinner />
+    );
+  }
 
   return (
     <form className="border border-primary rounded p-4">
@@ -35,8 +42,9 @@ const Loan = (props) => {
         label="Term in month"
         value={term}
         onChange={onTermChange}
-        optionsArr={termOptions}
-      />
+      >
+        {[12, 24, 36, 48, 60, 72]}
+      </Select>
       <Input
         mask="$ 9999999"
         label="Down payment"
@@ -48,8 +56,9 @@ const Loan = (props) => {
         label="Credit Score"
         value={creditScore}
         onChange={onCreditScoreChange}
-        optionsArr={creditScoreOptions}
-      />
+      >
+        {[600, 650, 700, 750, 800, 850, 900]}
+      </Select>
     </form>
   );
 };
@@ -67,10 +76,9 @@ Loan.propTypes = {
   onTermChange: PropTypes.func.isRequired,
   onDownPaymentChange: PropTypes.func.isRequired,
   onCreditScoreChange: PropTypes.func.isRequired,
-  creditScoreOptions: PropTypes.instanceOf(Array).isRequired,
-  termOptions: PropTypes.instanceOf(Array).isRequired,
   isTradeInError: PropTypes.bool.isRequired,
   isDownPaymentError: PropTypes.bool.isRequired,
+  isLoadingZip: PropTypes.bool.isRequired,
 };
 
 export default Loan;
