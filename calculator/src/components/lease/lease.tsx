@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Input from '../input';
 import Select from '../select';
+import leaseProps from './types';
 
-const Lease = (props) => {
+const Lease = (props: leaseProps) => {
   const {
     zip, tradeInValue, downPayment, creditScore, term, mileage,
     onZipChange, onMileageChange, onTradeInChange, onTermChange,

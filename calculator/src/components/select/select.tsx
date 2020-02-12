@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactChild } from 'react';
+import { selectProps } from './types';
 
-const Select = (props) => {
+const Select = (props: selectProps) => {
   const {
     label, value, onChange, children: optionsArr,
   } = props;
 
-  const renderedOptions = optionsArr.map((el) => (
+  const renderedOptions: Array<ReactChild> = optionsArr.map((el) => (
     <option
       value={el}
       key={el}
@@ -25,20 +25,13 @@ const Select = (props) => {
         className="w-50"
         value={value}
         id={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
         tabIndex={0}
       >
         {renderedOptions}
       </select>
     </label>
   );
-};
-
-Select.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  children: PropTypes.instanceOf(Array).isRequired,
 };
 
 export default Select;

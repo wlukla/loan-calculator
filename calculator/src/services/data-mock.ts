@@ -6,6 +6,6 @@ const autoData = {
   dealerRating: 4.8,
 };
 
-const getData = () => new Promise((resolve) => resolve(autoData));
+const getData = (): Promise<object> => new Promise((resolve) => resolve(autoData));
 
 export default getData;

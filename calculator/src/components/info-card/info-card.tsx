@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './info-card.css';
+import infoCardProps from './types';
 
-const InfoCard = (props) => {
+const InfoCard = (props: infoCardProps) => {
   const { monthlyPayment, taxes, autoData } = props;
   const {
     msrp, vehicleName, dealerName, dealerPhoneNumber, dealerRating,

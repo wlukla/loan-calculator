@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { ReactChild } from 'react';
 import InputMask from 'react-input-mask';
-import PropTypes from 'prop-types';
+import { inputProps } from './types';
 
-const Input = (props) => {
+const Input = (props: inputProps) => {
   const {
     label, value, onChange, error, mask,
   } = props;
 
-  let errorMessage;
+  let errorMessage: ReactChild;
 
   if (error) {
     errorMessage = (
@@ -26,12 +26,11 @@ const Input = (props) => {
       <div className="d-flex flex-column w-50">
         <InputMask
           mask={mask}
-          maskPlaceholder=""
           alwaysShowMask
           className="w-100"
           type="text"
           value={value}
-          onChange={onChange}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
           id={label}
           tabIndex={0}
         />
@@ -43,14 +42,6 @@ const Input = (props) => {
 
 Input.defaultProps = {
   error: false,
-};
-
-Input.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  error: PropTypes.bool,
-  mask: PropTypes.string.isRequired,
 };
 
 export default Input;

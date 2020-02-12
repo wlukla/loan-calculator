@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import Input from '../input';
 import Select from '../select';
 import Spinner from '../spinner';
+import loanProps from './types';
 
-const Loan = (props) => {
+const Loan = (props: loanProps) => {
   const {
     zip, tradeInValue, downPayment, creditScore, term, apr, isTradeInError,
     onZipChange, onAprChange, onTradeInChange, onTermChange, isDownPaymentError,
@@ -61,24 +62,6 @@ const Loan = (props) => {
       </Select>
     </form>
   );
-};
-
-Loan.propTypes = {
-  zip: PropTypes.string.isRequired,
-  tradeInValue: PropTypes.string.isRequired,
-  downPayment: PropTypes.string.isRequired,
-  creditScore: PropTypes.string.isRequired,
-  apr: PropTypes.string.isRequired,
-  term: PropTypes.string.isRequired,
-  onZipChange: PropTypes.func.isRequired,
-  onAprChange: PropTypes.func.isRequired,
-  onTradeInChange: PropTypes.func.isRequired,
-  onTermChange: PropTypes.func.isRequired,
-  onDownPaymentChange: PropTypes.func.isRequired,
-  onCreditScoreChange: PropTypes.func.isRequired,
-  isTradeInError: PropTypes.bool.isRequired,
-  isDownPaymentError: PropTypes.bool.isRequired,
-  isLoadingZip: PropTypes.bool.isRequired,
 };
 
 export default Loan;

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import tabSwitcherProps from './types';
 
-const TabSwitcher = (props) => {
+const TabSwitcher = (props: tabSwitcherProps) => {
   const buttons = [
     { name: 'loan', label: 'Loan' },
     { name: 'lease', label: 'Lease' },
