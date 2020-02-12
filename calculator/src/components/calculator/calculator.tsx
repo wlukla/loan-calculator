@@ -167,10 +167,15 @@ class Calculator extends React.Component {
 
   calculateMonthlyPaymentLoan() {
     const {
-      tradeInValue, downPayment, apr, creditScoreValue, term,
+      tradeInValue, downPayment, creditScoreValue, term,
     } = this.state;
+    let { apr } = this.state;
     const { autoData } = this.state;
     const { msrp } = autoData;
+
+    if (Number.isNaN(+apr)) {
+      apr = '0';
+    }
 
     const monthlyPaymentLoan = Math.round(
       ((+msrp - +tradeInValue - +downPayment) / +term) * +creditScoreValue * +apr,
