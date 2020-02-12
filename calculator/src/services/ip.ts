@@ -1,5 +1,6 @@
 class IpService {
   token: string;
+
   urlBase: string;
 
   constructor() {
